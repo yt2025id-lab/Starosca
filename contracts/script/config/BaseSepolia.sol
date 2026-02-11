@@ -8,8 +8,8 @@ library BaseSepolia {
     address constant USDC = 0x036CbD53842c5426634e7929541eC2318f3dCF7e;
 
     // Chainlink VRF v2.5 on Base Sepolia
-    address constant VRF_COORDINATOR = 0xd5D517aBE5cF79B7e95eC98dB0f0277788aFF634;
-    bytes32 constant VRF_KEY_HASH = 0xc799bd1e3bd4d1a41cd4024869a9ffd451063cc95f55bb4ffc1e58f874e90684;
+    address constant VRF_COORDINATOR = 0x5C210eF41CD1a72de73bF76eC39637bB0d3d7BEE;
+    bytes32 constant VRF_KEY_HASH = 0x9e1344a1247c8a1785d0a4681a27152bffdb43666ae5bf7d14d24a5efd44bf71;
 
     // Chainlink Data Feeds on Base Sepolia
     address constant USDC_USD_FEED = 0xd30e2101a97dcbAeBCBC04F14C3f624E67A35165;

@@ -1,10 +1,10 @@
 {
   "schedule": "0 0 */4 * * *",
-  "yieldManagerAddress": "0x0000000000000000000000000000000000000000",
+  "yieldManagerAddress": "0x994A2065b6C86A9b35366c888C279118b71dc883",
   "adapters": {
-    "aaveV3": "0x0000000000000000000000000000000000000000",
-    "compoundV3": "0x0000000000000000000000000000000000000000",
-    "moonwell": "0x0000000000000000000000000000000000000000"
+    "aaveV3": "0x397234Ba99487357Dca71BA2944Ef19c4703Fe6a",
+    "compoundV3": "0xA643f11Fb9f0bd409fbC98aCF8c43dc9Bf7d3D01",
+    "moonwell": "0x54fa989De91903faeFa3E7548B5262144a9fC9Be"
   },
   "rebalanceThresholdBps": 50,
   "openaiApiUrl": "https://api.openai.com/v1/chat/completions",

@@ -63,7 +63,7 @@ contract StaroscaPoolTest is Test {
         yieldManager.setFactory(address(factory));
 
         // Deploy and add mock yield adapter
-        yieldAdapter = new MockYieldAdapter(address(usdc));
+        yieldAdapter = new MockYieldAdapter(address(usdc), "MockYield", 500);
         yieldManager.addAdapter(address(yieldAdapter));
 
         vm.stopPrank();

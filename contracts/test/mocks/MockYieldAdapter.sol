@@ -11,13 +11,15 @@ contract MockYieldAdapter is IYieldAdapter {
     using SafeERC20 for IERC20;
 
     IERC20 public immutable usdcToken;
+    string private _protocolName;
     uint256 private _balance;
     uint256 private _apy; // basis points
     uint256 private _simulatedYield;
 
-    constructor(address _usdc) {
+    constructor(address _usdc, string memory name_, uint256 apy_) {
         usdcToken = IERC20(_usdc);
-        _apy = 500; // 5% default APY
+        _protocolName = name_;
+        _apy = apy_;
     }
 
     function deposit(uint256 amount) external override {
@@ -49,8 +51,8 @@ contract MockYieldAdapter is IYieldAdapter {
         return _apy;
     }
 
-    function protocolName() external pure override returns (string memory) {
-        return "MockYield";
+    function protocolName() external view override returns (string memory) {
+        return _protocolName;
     }
 
     function usdc() external view override returns (address) {
