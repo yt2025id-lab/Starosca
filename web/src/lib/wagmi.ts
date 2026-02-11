@@ -4,7 +4,7 @@ import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 
 export const config = getDefaultConfig({
   appName: "Starosca",
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_ID || "demo-project-id",
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "demo-project-id",
   chains: [baseSepolia],
   transports: {
     [baseSepolia.id]: http(
