@@ -1,0 +1,26 @@
+{
+  "name": "@starosca/server",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Starosca backend — event indexer + REST API for enriched pool data",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "fastify": "^5.2.0",
+    "@fastify/cors": "^11.0.0",
+    "viem": "^2.34.0",
+    "better-sqlite3": "^11.8.0",
+    "dotenv": "^16.4.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.0.0"
+  }
+}
