@@ -1,0 +1,21 @@
+# Starosca CRE Workflow Project Configuration
+# AI Yield Optimizer — fetches APY, analyzes with AI, rebalances on-chain
+
+local-simulation:
+  rpc-urls:
+    - https://sepolia.base.org
+  log-level: debug
+
+production-testnet:
+  don-family: "zone-a"
+  rpc-urls:
+    - https://sepolia.base.org
+  dev-platform:
+    don-id: 4
+  contracts:
+    WorkflowRegistry:
+      address: "0x0"
+      chain-selector: "10344971235874465080"
+    CapabilitiesRegistry:
+      address: "0x0"
+      chain-selector: "10344971235874465080"

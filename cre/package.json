@@ -1,0 +1,24 @@
+{
+  "name": "@starosca/cre-yield-optimizer",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "CRE Workflow: AI Yield Optimizer for Starosca — fetches APY data, analyzes with AI, and rebalances yield positions on-chain",
+  "scripts": {
+    "typecheck": "tsc",
+    "check": "biome check --write ${BIOME_PATHS:-.}",
+    "format": "biome format --write ${BIOME_PATHS:-.}"
+  },
+  "dependencies": {
+    "@chainlink/cre-sdk": "^1.0.7",
+    "viem": "^2.34.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.8",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "bun": ">=1.2.21"
+  }
+}

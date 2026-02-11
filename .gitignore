@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Foundry
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+contracts/lib/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Next.js
+web/.next/
+web/out/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+dist/
+build/
+
+# CRE
+cre/dist/
+cre/.env
+
+# Logs
+*.log
+
+# Secrets
+secrets.yaml
+cre/secrets.yaml

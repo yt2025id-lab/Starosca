@@ -1,0 +1,13 @@
+{
+  "schedule": "0 0 */4 * * *",
+  "yieldManagerAddress": "0x0000000000000000000000000000000000000000",
+  "adapters": {
+    "aaveV3": "0x0000000000000000000000000000000000000000",
+    "compoundV3": "0x0000000000000000000000000000000000000000",
+    "moonwell": "0x0000000000000000000000000000000000000000"
+  },
+  "rebalanceThresholdBps": 50,
+  "openaiApiUrl": "https://api.openai.com/v1/chat/completions",
+  "openaiModel": "gpt-4o-mini",
+  "chainId": 84532
+}
