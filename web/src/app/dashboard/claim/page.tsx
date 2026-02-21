@@ -2,14 +2,12 @@
 
 import { useAccount } from "wagmi";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowLeft, Wallet, Info, CheckCircle2, Coins, Gavel } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { useUserPools } from "@/hooks/useStaroscaFactory";
 import { usePoolInfo, useClaim } from "@/hooks/useStaroscaPool";
 import { formatUSDC, POOL_STATUS } from "@/lib/constants";
@@ -22,57 +20,94 @@ export default function ClaimPage() {
 
   if (!address) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-12 text-center">
-        <h1 className="text-2xl font-bold mb-4">Claim Distributions</h1>
-        <p className="text-zinc-400">Connect your wallet to view claimable pools.</p>
+      <div className="min-h-screen bg-bg-dark flex items-center justify-center p-6">
+        <Card className="max-w-md w-full text-center py-12 px-8">
+          <Wallet size={48} className="mx-auto text-white/5 mb-6" />
+          <h1 className="text-2xl font-bold uppercase tracking-tight mb-4">Connect Wallet</h1>
+          <p className="text-white/40 text-sm font-mono mb-8">Access your claimable pool distributions by connecting your Web3 identity.</p>
+          <Button className="w-full py-6 rounded-2xl">Connect Wallet</Button>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-12 space-y-6">
-      <div className="flex items-center gap-2 text-sm text-zinc-500">
-        <Link href="/dashboard" className="hover:text-violet-400">
-          Dashboard
+    <div className="min-h-screen bg-bg-dark text-white pb-32">
+      <div className="max-w-4xl mx-auto px-6 pt-16">
+        {/* Navigation */}
+        <Link href="/dashboard" className="inline-flex items-center gap-2 text-white/40 hover:text-white mb-8 group transition-colors">
+          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+          <span className="text-xs font-mono uppercase">Back to Dashboard</span>
         </Link>
-        <span>/</span>
-        <span className="text-zinc-300">Claim</span>
-      </div>
 
-      <h1 className="text-2xl font-bold">Claim Distributions</h1>
-      <p className="text-zinc-400 text-sm">
-        When a pool is finalized, claim your remaining collateral + earned yield.
-      </p>
+        {/* Header */}
+        <header className="mb-12">
+          <h1 className="text-4xl font-bold uppercase tracking-tighter mb-4">Ready to <span className="text-brand-primary">Claim</span></h1>
+          <p className="text-white/40 font-mono text-sm max-w-xl leading-relaxed">
+            When a pool rotation completes, your remaining collateral and accumulated yield are automatically calculated and ready for withdrawal.
+          </p>
+        </header>
 
-      {isLoading ? (
-        <p className="text-zinc-400">Loading your pools...</p>
-      ) : poolAddresses.length === 0 ? (
-        <Card className="bg-zinc-900 border-zinc-800">
-          <CardContent className="pt-6 text-center">
-            <p className="text-zinc-500">You have no pools to claim from.</p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="space-y-4">
-          {poolAddresses.map((addr) => (
-            <ClaimablePoolCard key={addr} poolAddress={addr} />
-          ))}
-        </div>
-      )}
-
-      <Card className="bg-zinc-900 border-zinc-800">
-        <CardHeader>
-          <CardTitle className="text-white text-sm">Distribution Breakdown</CardTitle>
-        </CardHeader>
-        <CardContent className="text-sm text-zinc-400 space-y-2">
-          <p>When you claim, you receive:</p>
-          <div className="space-y-1 ml-4">
-            <p>1. <span className="text-zinc-200">Remaining Collateral</span> &mdash; original minus any missed payment deductions</p>
-            <p>2. <span className="text-zinc-200">Collateral Yield</span> &mdash; proportional to time-weighted collateral held</p>
-            <p>3. <span className="text-zinc-200">Contribution Yield</span> &mdash; proportional to on-time payment days</p>
+        <div className="grid lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-6">
+            {isLoading ? (
+              <div className="py-12 flex flex-col items-center gap-4">
+                <div className="w-8 h-8 border-2 border-brand-primary border-t-transparent rounded-full animate-spin" />
+                <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Scanning Protocols...</span>
+              </div>
+            ) : poolAddresses.length === 0 ? (
+              <Card className="py-16 text-center border-dashed border-2 border-white/5">
+                <p className="text-white/20 font-mono text-xs uppercase">No active pools found in your history</p>
+              </Card>
+            ) : (
+              <div className="grid gap-4">
+                {poolAddresses.map((addr) => (
+                  <ClaimablePoolCard key={addr} poolAddress={addr} />
+                ))}
+              </div>
+            )}
           </div>
-        </CardContent>
-      </Card>
+
+          <div className="space-y-6">
+            <Card title="Distribution Intel" className="bg-brand-primary/5 border-brand-primary/20">
+              <div className="space-y-6 pt-2">
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
+                    <CheckCircle2 size={18} className="text-brand-primary" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold uppercase mb-1">Collateral Refund</h4>
+                    <p className="text-[11px] text-white/40 font-mono leading-relaxed">Original deposit minus structural deductions.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
+                    <Coins size={18} className="text-brand-primary" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold uppercase mb-1">Time-Scaled Yield</h4>
+                    <p className="text-[11px] text-white/40 font-mono leading-relaxed">Yield generated by your collateral during its lock period.</p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
+                    <Gavel size={18} className="text-brand-primary" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold uppercase mb-1">Contribution Yield</h4>
+                    <p className="text-[11px] text-white/40 font-mono leading-relaxed">Additional yield rewards from on-time monthly payments.</p>
+                  </div>
+                </div>
+              </div>
+              <Separator className="my-6 bg-white/10" />
+              <div className="bg-black/20 p-4 rounded-xl flex gap-3">
+                <Info size={14} className="text-brand-primary shrink-0" />
+                <p className="text-[10px] font-mono text-white/40 italic">Total yield is finalized exactly 24 hours after the final month drawing.</p>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -88,93 +123,61 @@ function ClaimablePoolCard({ poolAddress }: { poolAddress: `0x${string}` }) {
 
   if (!info) return null;
 
-  type PoolInfo = {
-    config: {
-      maxParticipants: number;
-      monthlyContribution: bigint;
-      collateralPerUser: bigint;
-      startTimestamp: bigint;
-    };
-    status: number;
-    currentMonth: number;
-    participantCount: number;
-    totalCollateral: bigint;
-    totalContributions: bigint;
-  };
-
-  const poolInfo = info as PoolInfo;
+  const poolInfo = info as any;
   const isFinalized = poolInfo.status === 3;
-  const statusLabel =
-    POOL_STATUS[poolInfo.status as keyof typeof POOL_STATUS] ?? "Unknown";
+  const statusLabel = POOL_STATUS[poolInfo.status as keyof typeof POOL_STATUS] ?? "Unknown";
 
   return (
-    <Card
-      className={`bg-zinc-900 ${
-        isFinalized ? "border-emerald-600/30" : "border-zinc-800"
-      }`}
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
     >
-      <CardContent className="pt-4">
-        <div className="flex justify-between items-center mb-3">
-          <Link
-            href={`/pools/${poolAddress}`}
-            className="font-mono text-sm text-zinc-300 hover:text-violet-400"
-          >
-            {poolAddress.slice(0, 6)}...{poolAddress.slice(-4)}
-          </Link>
-          <Badge
-            className={
-              isFinalized
-                ? "bg-emerald-600/20 text-emerald-400"
-                : "bg-zinc-700 text-zinc-300"
-            }
-          >
-            {statusLabel}
-          </Badge>
-        </div>
+      <Card
+        className={`${isFinalized ? 'border-brand-primary/20' : 'opacity-60 grayscale'}`}
+      >
+        <div className="p-6">
+          <div className="flex justify-between items-start mb-8">
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono text-white/20 uppercase tracking-widest">Pool Identifier</span>
+              <Link href={`/pools/${poolAddress}`} className="block text-md font-mono hover:text-brand-primary transition-colors">
+                {poolAddress.slice(0, 8)}...{poolAddress.slice(-6)}
+              </Link>
+            </div>
+            <Badge variant={isFinalized ? "success" : "secondary"}>
+              {statusLabel}
+            </Badge>
+          </div>
 
-        <div className="grid grid-cols-3 gap-4 text-sm mb-4">
-          <div>
-            <p className="text-zinc-500 text-xs">Monthly</p>
-            <p className="text-white">
-              ${formatUSDC(poolInfo.config.monthlyContribution)}
-            </p>
+          <div className="grid grid-cols-3 gap-12 mb-8">
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Collateral</span>
+              <div className="text-lg font-bold font-mono text-white">${formatUSDC(poolInfo.config.collateralPerUser)}</div>
+            </div>
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Monthly</span>
+              <div className="text-lg font-bold font-mono text-white">${formatUSDC(poolInfo.config.monthlyContribution)}</div>
+            </div>
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Members</span>
+              <div className="text-lg font-bold font-mono text-white">{poolInfo.participantCount}/{poolInfo.config.maxParticipants}</div>
+            </div>
           </div>
-          <div>
-            <p className="text-zinc-500 text-xs">Participants</p>
-            <p className="text-white">{poolInfo.config.maxParticipants}</p>
-          </div>
-          <div>
-            <p className="text-zinc-500 text-xs">Collateral</p>
-            <p className="text-white">
-              ${formatUSDC(poolInfo.config.collateralPerUser)}
-            </p>
-          </div>
-        </div>
 
-        {isFinalized && !claimSuccess && (
-          <Button
-            onClick={() => claim()}
-            disabled={claimPending || claimConfirming}
-            className="w-full bg-emerald-600 hover:bg-emerald-700"
-          >
-            {claimPending
-              ? "Confirm in wallet..."
-              : claimConfirming
-              ? "Claiming..."
-              : "Claim Distribution"}
-          </Button>
-        )}
-        {claimSuccess && (
-          <p className="text-emerald-400 text-sm text-center">
-            Successfully claimed!
-          </p>
-        )}
-        {!isFinalized && (
-          <p className="text-zinc-500 text-xs text-center">
-            Pool must be finalized before claiming
-          </p>
-        )}
-      </CardContent>
-    </Card>
+          {claimSuccess ? (
+            <p className="text-brand-primary text-sm font-mono text-center py-4 uppercase tracking-widest">Claimed Successfully</p>
+          ) : (
+            <Button
+              onClick={() => claim()}
+              disabled={!isFinalized || claimPending || claimConfirming}
+              isLoading={claimPending || claimConfirming}
+              variant={isFinalized ? "primary" : "ghost"}
+              className="w-full py-6 rounded-2xl"
+            >
+              {isFinalized ? "Finalize Withdrawal" : "Wait for Finalization"}
+            </Button>
+          )}
+        </div>
+      </Card>
+    </motion.div>
   );
 }

@@ -1,92 +1,47 @@
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="card"
-      className={cn(
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm",
-        className
-      )}
-      {...props}
-    />
-  )
+export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  title?: string;
+  description?: string;
+  footer?: React.ReactNode;
 }
 
-function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
+function Card({ children, title, description, className, footer, ...props }: CardProps) {
   return (
-    <div
-      data-slot="card-header"
-      className={cn(
-        "@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6",
-        className
+    <div className={cn("glass rounded-3xl p-6 flex flex-col gap-4", className)} {...props}>
+      {(title || description) && (
+        <div className="space-y-1">
+          {title && <h3 className="text-xl font-bold uppercase">{title}</h3>}
+          {description && <p className="text-sm text-white/40">{description}</p>}
+        </div>
       )}
-      {...props}
-    />
-  )
+      <div className="flex-1">{children}</div>
+      {footer && <div className="pt-4 border-t border-white/5">{footer}</div>}
+    </div>
+  );
+}
+
+// Keeping these for potential compatibility with existing imports, 
+// though the user wants to follow the ui-kit style.
+function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
+  return <div className={cn("space-y-1.5 p-0", className)} {...props} />
 }
 
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="card-title"
-      className={cn("leading-none font-semibold", className)}
-      {...props}
-    />
-  )
+  return <h3 className={cn("text-xl font-bold uppercase leading-none", className)} {...props} />
 }
 
-function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="card-description"
-      className={cn("text-muted-foreground text-sm", className)}
-      {...props}
-    />
-  )
-}
-
-function CardAction({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="card-action"
-      className={cn(
-        "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
-        className
-      )}
-      {...props}
-    />
-  )
+function CardDescription({ className, ...props }: React.ComponentProps<"p">) {
+  return <p className={cn("text-sm text-white/40", className)} {...props} />
 }
 
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="card-content"
-      className={cn("px-6", className)}
-      {...props}
-    />
-  )
+  return <div className={cn("p-0 pt-0", className)} {...props} />
 }
 
 function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="card-footer"
-      className={cn("flex items-center px-6 [.border-t]:pt-6", className)}
-      {...props}
-    />
-  )
+  return <div className={cn("flex items-center p-0 pt-4 border-t border-white/5", className)} {...props} />
 }
 
-export {
-  Card,
-  CardHeader,
-  CardFooter,
-  CardTitle,
-  CardAction,
-  CardDescription,
-  CardContent,
-}
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
