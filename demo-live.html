@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starosca — Live Demo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --green:#00e676;--green2:#00c853;--green-dim:rgba(0,230,118,0.12);--green-border:rgba(0,230,118,0.25);
+  --violet:#7c3aed;--violet-dim:rgba(124,58,237,0.15);
+  --bg:#080808;--card:#111111;--card2:#161616;--border:#222222;
+  --text:#ffffff;--dim:#666666;--dim2:#444444;
+  --red:#ef4444;
+}
+html,body{height:100vh;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
+/* ── HEADER ── */
+.hdr{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0}
+.logo{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:900;letter-spacing:.5px;color:var(--text)}
+.logo-icon{width:30px;height:30px;background:var(--green);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hdr-r{display:flex;align-items:center;gap:10px}
+.cl-tag{font-size:11px;color:var(--green);background:var(--green-dim);border:1px solid var(--green-border);padding:3px 9px;border-radius:20px;font-weight:700;display:flex;align-items:center;gap:4px}
+.cl-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+.w-chip{font-size:12px;font-weight:600;background:var(--card);border:1px solid var(--border);padding:6px 12px;border-radius:8px;display:flex;align-items:center;gap:7px}
+.w-dot{width:6px;height:6px;border-radius:50%;background:var(--dim2)}
+.w-dot.on{background:var(--green)}
+.spd{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--dim)}
+.sb{background:var(--card);border:1px solid var(--border);color:var(--dim);padding:3px 8px;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600}
+.sb.on{background:var(--green);border-color:var(--green);color:#000}
+
+/* ── LAYOUT ── */
+.wrap{display:grid;grid-template-columns:268px 1fr;height:calc(100vh - 52px);overflow:hidden}
+
+/* ── LEFT ── */
+.left{border-right:1px solid var(--border);display:flex;flex-direction:column;gap:0;overflow:hidden}
+.lsec{padding:10px 14px;border-bottom:1px solid var(--border)}
+.lt{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--dim);font-weight:700;margin-bottom:6px}
+
+/* Balance */
+.bal-big{font-size:22px;font-weight:900;line-height:1}
+.bal-addr{font-size:10px;color:var(--dim);margin-top:2px;font-family:monospace}
+.bal-rows{margin-top:8px;display:flex;flex-direction:column;gap:0}
+.br{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-top:1px solid var(--border)}
+.bl{font-size:11px;color:var(--dim)}
+.bv{font-size:12px;font-weight:700}
+.bv.gr{color:var(--green)}.bv.vl{color:#a78bfa}.bv.cy{color:#06b6d4}
+
+/* Pool */
+.pr{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px}
+.pr:last-child{border-bottom:none}
+.plabel{color:var(--dim)}
+.pval{font-weight:700;font-size:11px}
+.sbadge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;display:inline-block}
+.sp{background:rgba(234,179,8,.1);color:#eab308}
+.sa{background:var(--green-dim);color:var(--green)}
+.sc{background:rgba(168,85,247,.1);color:#a78bfa}
+.sf{background:rgba(6,182,212,.1);color:#06b6d4}
+
+/* Participants */
+.part{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)}
+.part:last-child{border-bottom:none}
+.av{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.av-a{background:var(--green-dim);border:1px solid var(--green-border)}
+.av-b{background:rgba(6,182,212,.1)}.av-c{background:rgba(249,115,22,.1)}
+.pn{font-size:12px;font-weight:600;flex:1}
+.pa{font-size:9px;color:var(--dim);font-family:monospace}
+.ps{font-size:10px;font-weight:700}
+.sw{color:var(--dim)}.sj{color:var(--green)}.sk{color:#eab308}
+
+/* Yield */
+.yield-num{font-size:18px;font-weight:900;color:var(--green)}
+.yield-apy{font-size:10px;color:var(--dim);margin-top:1px}
+.pbadge{display:inline-flex;align-items:center;gap:4px;background:var(--card2);border:1px solid var(--border);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;margin-top:5px}
+
+/* ── RIGHT ── */
+.right{display:flex;flex-direction:column;overflow:hidden}
+
+/* Steps */
+.steps{height:44px;display:flex;align-items:center;padding:0 20px;gap:0;border-bottom:1px solid var(--border);background:var(--card);overflow-x:auto;flex-shrink:0}
+.sw2{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.sd{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;transition:all .3s}
+.sd.done{background:var(--green);color:#000}
+.sd.act{background:var(--violet);color:#fff;box-shadow:0 0 0 3px rgba(124,58,237,.25)}
+.sd.pend{background:var(--card2);border:1px solid var(--border);color:var(--dim)}
+.slabel{font-size:8px;color:var(--dim);margin-top:2px;white-space:nowrap}
+.sline{height:2px;flex:1;min-width:14px;background:var(--border);margin-top:-8px;transition:background .3s}
+.sline.done{background:var(--green)}
+
+/* Main area */
+.main-area{flex:1;overflow:hidden;padding:14px 20px;display:flex;flex-direction:column;gap:12px}
+.mc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;flex:1;overflow:hidden;animation:su .35s ease}
+.mt{font-size:17px;font-weight:800;margin-bottom:4px;line-height:1.2}
+.md{font-size:12px;color:var(--dim);line-height:1.5;margin-bottom:10px}
+
+/* TX LOG */
+.txlog{background:var(--card);border:1px solid var(--border);border-radius:10px;flex-shrink:0;overflow:hidden}
+.txhead{font-size:10px;font-weight:700;color:var(--dim);padding:7px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:5px;background:var(--card2)}
+.txhead::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite}
+.txbody{max-height:90px;overflow-y:auto}
+.txi{display:flex;align-items:center;gap:8px;padding:5px 12px;border-bottom:1px solid var(--border);font-size:11px;animation:su .3s ease}
+.txi:last-child{border-bottom:none}
+.txic{width:20px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+.icg{background:rgba(0,230,118,.1)}.icv{background:rgba(124,58,237,.1)}.icc{background:rgba(6,182,212,.1)}.ico{background:rgba(249,115,22,.1)}
+.txn{font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.txh{font-family:monospace;color:var(--dim);font-size:9px;margin-left:auto;white-space:nowrap}
+.txa{font-weight:700;white-space:nowrap;margin-left:6px;font-size:11px}
+.txa.gr{color:var(--green)}.txa.rd{color:var(--red)}
+
+/* MODAL */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .2s}
+.mov.show{opacity:1;pointer-events:all}
+.mod{background:#111;border:1px solid #333;border-radius:16px;padding:24px;max-width:380px;width:90%;transform:translateY(12px);transition:transform .2s}
+.mov.show .mod{transform:translateY(0)}
+.mi{font-size:32px;margin-bottom:10px}
+.mti{font-size:16px;font-weight:800;margin-bottom:4px}
+.mde{font-size:12px;color:var(--dim);margin-bottom:12px;line-height:1.5}
+.mdet{background:var(--card2);border-radius:8px;padding:10px;margin-bottom:10px;font-size:11px}
+.mdr{display:flex;justify-content:space-between;padding:2px 0}
+.mdl{color:var(--dim)}.mdv{font-weight:700}
+.mpend{display:flex;align-items:center;gap:7px;background:rgba(0,230,118,.06);border:1px solid var(--green-border);border-radius:7px;padding:8px 10px;font-size:11px;color:var(--green);margin-bottom:8px}
+.abar{height:2px;background:var(--border);border-radius:2px;overflow:hidden}
+.afill{height:100%;background:var(--green);width:0%;transition:width linear}
+
+/* VRF */
+.vrfbox{background:rgba(0,230,118,.04);border:1px solid var(--green-border);border-radius:12px;padding:16px;text-align:center;margin:8px 0}
+.dice{font-size:44px;display:block;margin-bottom:6px}
+.vrfnum{font-size:28px;font-weight:900;font-family:monospace;color:var(--green);margin:4px 0}
+.wbox{background:rgba(234,179,8,.07);border:1px solid #eab30840;border-radius:10px;padding:12px;margin-top:10px;animation:su .4s ease}
+.wname{font-size:22px;font-weight:900;color:#eab308}
+
+/* Cards */
+.statrow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0}
+.statcard{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px}
+.stl{font-size:9px;color:var(--dim);margin-bottom:2px}
+.stv{font-size:14px;font-weight:800}
+.stv.gr{color:var(--green)}
+
+.mtl{display:flex;gap:6px;margin:6px 0}
+.mi2{flex:1;background:var(--card2);border-radius:7px;padding:7px;text-align:center;border:1px solid var(--border)}
+.mi2.act{border-color:var(--green);background:rgba(0,230,118,.05)}
+.mi2.done{border-color:rgba(0,230,118,.3)}
+.mln{font-size:9px;color:var(--dim)}
+.mls{font-size:10px;font-weight:700;margin-top:1px}
+.mls.gr{color:var(--green)}
+
+/* Claim table */
+.ctbl{width:100%;border-collapse:collapse;font-size:11px}
+.ctbl th{text-align:left;padding:5px 8px;border-bottom:1px solid var(--green);color:var(--green);font-size:10px}
+.ctbl td{padding:5px 8px;border-bottom:1px solid var(--border)}
+.ctbl td:last-child{text-align:right;font-weight:700}
+.ctbl tfoot td{font-size:13px;font-weight:900;color:var(--green);border-top:1px solid var(--green);border-bottom:none}
+
+/* Summary */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.sc2{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px}
+.scl{font-size:10px;color:var(--dim);margin-bottom:2px}
+.scv{font-size:18px;font-weight:900}
+.scv.gr{color:var(--green)}.scv.yw{color:#eab308}.scv.cy{color:#06b6d4}
+
+/* Subtitle */
+.subbar{position:fixed;bottom:0;left:0;right:0;background:rgba(8,8,8,.95);border-top:1px solid var(--border);padding:8px 20px;z-index:100;backdrop-filter:blur(10px);display:none}
+.sublabel{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--green);font-weight:700;margin-bottom:2px}
+.subtext{font-size:12px;line-height:1.5;color:var(--text)}
+
+/* Start screen */
+.ss{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:300}
+.ss-logo{font-size:14px;font-weight:900;letter-spacing:.5px;display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.ss-icon{width:42px;height:42px;background:var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ss-h{font-size:48px;font-weight:900;line-height:1;text-align:center}
+.ss-h span{color:var(--green)}
+.ss-sub{font-size:14px;color:var(--dim);text-align:center;max-width:440px;line-height:1.6}
+.ss-chips{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.ss-chip{background:var(--card);border:1px solid var(--border);padding:10px 16px;border-radius:10px;text-align:center}
+.ss-cv{font-size:16px;font-weight:800}
+.ss-cl{font-size:10px;color:var(--dim);margin-top:1px}
+.playbtn{background:var(--green);color:#000;border:none;padding:14px 40px;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;transition:all .2s;letter-spacing:.3px}
+.playbtn:hover{background:var(--green2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,230,118,.3)}
+.ss-spd{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--dim);background:var(--card);border:1px solid var(--border);padding:6px 12px;border-radius:8px}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes su{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.spin{animation:spin .6s linear infinite;display:inline-block}
+</style>
+</head>
+<body>
+
+<!-- SVG Logo Icon (reusable) -->
+<svg style="display:none">
+  <symbol id="ico-stack" viewBox="0 0 24 24" fill="none">
+    <path d="M12 2L2 7l10 5 10-5-10-5z" fill="black"/>
+    <path d="M2 12l10 5 10-5" stroke="black" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M2 17l10 5 10-5" stroke="black" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</svg>
+
+<!-- START SCREEN -->
+<div class="ss" id="ss">
+  <div class="ss-logo">
+    <div class="ss-icon"><svg width="24" height="24"><use href="#ico-stack"/></svg></div>
+    STAROSCA
+  </div>
+  <div class="ss-h">THE FUTURE OF<br><span>ROSCA</span> YIELD.</div>
+  <div class="ss-sub">Fully automated demo — connect wallet → join pool → 3-month ROSCA → claim collateral + yield</div>
+  <div class="ss-chips">
+    <div class="ss-chip"><div class="ss-cv">3</div><div class="ss-cl">Members</div></div>
+    <div class="ss-chip"><div class="ss-cv">10 USDC</div><div class="ss-cl">Monthly</div></div>
+    <div class="ss-chip"><div class="ss-cv">30 USDC</div><div class="ss-cl">Collateral</div></div>
+    <div class="ss-chip"><div class="ss-cv">3 Mo.</div><div class="ss-cl">Duration</div></div>
+  </div>
+  <button class="playbtn" onclick="startDemo()">▶  PLAY DEMO</button>
+  <div class="ss-spd">
+    Speed:
+    <button class="sb on" id="spd1" onclick="setSpeed(1,this)">1×</button>
+    <button class="sb" id="spd2" onclick="setSpeed(2,this)">2×</button>
+    <button class="sb" id="spd3" onclick="setSpeed(3,this)">3×</button>
+  </div>
+  <div style="font-size:11px;color:var(--dim);display:flex;align-items:center;gap:6px">
+    <span class="cl-dot"></span> POWERED BY CHAINLINK · BASE SEPOLIA
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="logo">
+    <div class="logo-icon"><svg width="18" height="18"><use href="#ico-stack"/></svg></div>
+    STAROSCA
+  </div>
+  <div class="hdr-r">
+    <div class="cl-tag"><span class="cl-dot"></span>POWERED BY CHAINLINK</div>
+    <div class="spd">
+      Speed:
+      <button class="sb on" id="hs1" onclick="setSpeed(1,this)">1×</button>
+      <button class="sb" id="hs2" onclick="setSpeed(2,this)">2×</button>
+      <button class="sb" id="hs3" onclick="setSpeed(3,this)">3×</button>
+    </div>
+    <div class="w-chip"><span class="w-dot" id="wd"></span><span id="wl">Not Connected</span></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- LEFT PANEL -->
+  <div class="left">
+    <!-- Wallet -->
+    <div class="lsec">
+      <div class="lt">Alice's Wallet</div>
+      <div class="bal-big" id="ubal">1,000.00 <span style="font-size:13px;color:var(--dim)">USDC</span></div>
+      <div class="bal-addr" id="waddr">—</div>
+      <div class="bal-rows">
+        <div class="br"><span class="bl">Locked Collateral</span><span class="bv vl" id="col">0.00 USDC</span></div>
+        <div class="br"><span class="bl">Win Pot</span><span class="bv gr" id="pot">0.00 USDC</span></div>
+        <div class="br"><span class="bl">Yield Earned</span><span class="bv cy" id="yg">0.0000 USDC</span></div>
+      </div>
+    </div>
+    <!-- Pool -->
+    <div class="lsec">
+      <div class="lt">Pool Info</div>
+      <div class="pr"><span class="plabel">Status</span><span class="pval"><span class="sbadge sp" id="pst">PENDING</span></span></div>
+      <div class="pr"><span class="plabel">Members</span><span class="pval" id="pcount">0 / 3</span></div>
+      <div class="pr"><span class="plabel">Monthly</span><span class="pval">10.00 USDC</span></div>
+      <div class="pr"><span class="plabel">Collateral</span><span class="pval">30.00 USDC</span></div>
+      <div class="pr"><span class="plabel">Round</span><span class="pval" id="cm">—</span></div>
+      <div class="pr"><span class="plabel">Total Funds</span><span class="pval" style="color:var(--green)" id="pval">0.00 USDC</span></div>
+    </div>
+    <!-- Participants -->
+    <div class="lsec" style="flex:1">
+      <div class="lt">Members</div>
+      <div class="part"><div class="av av-a">👤</div><div style="flex:1"><div class="pn">Alice <span style="font-size:9px;color:var(--green)">(You)</span></div><div class="pa">0xcD1b...5821</div></div><div class="ps" id="stA"><span class="sw">Waiting</span></div></div>
+      <div class="part"><div class="av av-b">🧑</div><div style="flex:1"><div class="pn">Bob</div><div class="pa">0x7F3a...2B91</div></div><div class="ps" id="stB"><span class="sw">Waiting</span></div></div>
+      <div class="part"><div class="av av-c">👩</div><div style="flex:1"><div class="pn">Carol</div><div class="pa">0x9E4c...7D42</div></div><div class="ps" id="stC"><span class="sw">Waiting</span></div></div>
+    </div>
+    <!-- Yield -->
+    <div class="lsec">
+      <div class="lt">AI Yield Optimizer</div>
+      <div class="yield-num" id="ty">0.0000 USDC</div>
+      <div class="yield-apy">APY: <span id="apy" style="color:var(--green);font-weight:700">8.50%</span></div>
+      <div class="pbadge" id="prot">🔵 Aave V3</div>
+      <div style="font-size:9px;color:var(--dim);margin-top:4px">⚡ CRE rebalance every 4 hrs</div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right">
+    <!-- Steps -->
+    <div class="steps">
+      <div class="sw2"><div class="sd act" id="d0">1</div><div class="slabel">Connect</div></div><div class="sline" id="l0"></div>
+      <div class="sw2"><div class="sd pend" id="d1">2</div><div class="slabel">Join</div></div><div class="sline" id="l1"></div>
+      <div class="sw2"><div class="sd pend" id="d2">3</div><div class="slabel">Mo. 1</div></div><div class="sline" id="l2"></div>
+      <div class="sw2"><div class="sd pend" id="d3">4</div><div class="slabel">Mo. 2</div></div><div class="sline" id="l3"></div>
+      <div class="sw2"><div class="sd pend" id="d4">5</div><div class="slabel">Mo. 3</div></div><div class="sline" id="l4"></div>
+      <div class="sw2"><div class="sd pend" id="d5">6</div><div class="slabel">Finalize</div></div><div class="sline" id="l5"></div>
+      <div class="sw2"><div class="sd pend" id="d6">7</div><div class="slabel">Claim</div></div>
+    </div>
+    <!-- Main -->
+    <div class="main-area">
+      <div class="mc" id="mc">
+        <div style="text-align:center;padding:20px 0">
+          <div style="margin-bottom:10px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="var(--green)"/><path d="M2 12l10 5 10-5" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 17l10 5 10-5" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="mt">Demo ready to start</div>
+          <div class="md">Click Play Demo to start the full automated simulation.</div>
+        </div>
+      </div>
+      <!-- TX LOG -->
+      <div class="txlog">
+        <div class="txhead">📋 Transaction Log</div>
+        <div class="txbody" id="txb"><div style="padding:8px 12px;font-size:11px;color:var(--dim)">Waiting...</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBTITLE BAR -->
+<div class="subbar" id="subbar">
+  <div class="sublabel">🎙 Voiceover</div>
+  <div class="subtext" id="subtext"></div>
+</div>
+
+<!-- MODAL -->
+<div class="mov" id="mov">
+  <div class="mod">
+    <div class="mi" id="mi">📝</div>
+    <div class="mti" id="mti"></div>
+    <div class="mde" id="mde"></div>
+    <div class="mpend"><span class="spin">⟳</span><span id="mpend">Sending to Base Sepolia...</span></div>
+    <div class="mdet" id="mdet"></div>
+    <div class="abar"><div class="afill" id="afill"></div></div>
+  </div>
+</div>
+
+<script>
+let SPD=1;
+const BASE={s:700,m:1300,l:2000,mo:1800,vrf:2800};
+const T=()=>({s:BASE.s/SPD,m:BASE.m/SPD,l:BASE.l/SPD,mo:BASE.mo/SPD,vrf:BASE.vrf/SPD});
+const S={u:1000,col:0,pot:0,yg:0,ty:0,pv:0,joined:[false,false,false],pst:'PENDING',cm:0,mw:[],W:[1,0,2],txn:0,yi:null,claim:0};
+const NM=['Alice (You)','Bob','Carol'];
+const sl=ms=>new Promise(r=>setTimeout(r,ms));
+const fmt=n=>n.toFixed(2);
+const fmtY=n=>n.toFixed(4);
+const rh=()=>'0x'+Math.random().toString(16).slice(2,7)+'…'+Math.random().toString(16).slice(2,5);
+
+function setSpeed(n,el){
+  SPD=n;
+  document.querySelectorAll('.sb').forEach(b=>b.classList.remove('on'));
+  if(el) el.classList.add('on');
+  document.getElementById('spd'+n)?.classList.add('on');
+  document.getElementById('hs'+n)?.classList.add('on');
+}
+function sub(t){document.getElementById('subbar').style.display='block';document.getElementById('subtext').textContent=t}
+function addTx(ic,cls,nm,det,amt,ac=''){
+  const b=document.getElementById('txb');
+  const e=b.querySelector('div[style*="color:var(--dim)"]');if(e)e.remove();
+  S.txn++;
+  const el=document.createElement('div');el.className='txi';
+  el.innerHTML=`<div class="txic ${cls}">${ic}</div><div class="txn">${nm}${det?` <span style="color:var(--dim);font-weight:400">${det}</span>`:''}</div><div class="txh">${rh()}</div>${amt?`<div class="txa ${ac}">${amt}</div>`:''}`;
+  b.insertBefore(el,b.firstChild);b.scrollTop=0;
+}
+function setStep(n){
+  for(let i=0;i<7;i++){
+    const d=document.getElementById('d'+i);
+    if(i<n){d.className='sd done';d.textContent='✓';}
+    else if(i===n){d.className='sd act';d.textContent=i+1;}
+    else{d.className='sd pend';d.textContent=i+1;}
+    if(i<6)document.getElementById('l'+i).className='sline'+(i<n?' done':'');
+  }
+}
+function upd(){
+  document.getElementById('ubal').innerHTML=`${fmt(S.u)} <span style="font-size:13px;color:var(--dim)">USDC</span>`;
+  document.getElementById('col').textContent=fmt(S.col)+' USDC';
+  document.getElementById('pot').textContent=fmt(S.pot)+' USDC';
+  document.getElementById('yg').textContent=fmtY(S.yg)+' USDC';
+  document.getElementById('ty').textContent=fmtY(S.ty)+' USDC';
+  document.getElementById('pcount').textContent=S.joined.filter(Boolean).length+' / 3';
+  document.getElementById('pval').textContent=fmt(S.pv)+' USDC';
+  document.getElementById('cm').textContent=S.cm>0?S.cm+' / 3':'—';
+  const ps=document.getElementById('pst');
+  const cm={PENDING:'sbadge sp',ACTIVE:'sbadge sa',COMPLETED:'sbadge sc',FINALIZED:'sbadge sf'};
+  ps.className=cm[S.pst]||'sbadge sp';ps.textContent=S.pst;
+  [['stA',0],['stB',1],['stC',2]].forEach(([id,i])=>{
+    const el=document.getElementById(id);
+    const won=S.mw.reduce((a,w,mi)=>{if(w===i)a.push(mi+1);return a;},[]);
+    if(!S.joined[i])el.innerHTML='<span class="sw">Waiting</span>';
+    else if(won.length)el.innerHTML=`<span class="sk">🏆 M${won.join(',')}</span>`;
+    else el.innerHTML='<span class="sj">✓ Joined</span>';
+  });
+}
+function setMC(h){const mc=document.getElementById('mc');mc.innerHTML=h;mc.style.animation='none';mc.offsetHeight;mc.style.animation='su .35s ease'}
+function mtl(a,dn){return `<div class="mtl">${[1,2,3].map(m=>`<div class="mi2${m===a?' act':m<=dn?' done':''}"><div class="mln">Month ${m}</div><div class="mls${m<a?' gr':''}">${m<a?'✓ Done':m===a?'● Active':'○ Pending'}</div></div>`).join('')}</div>`;}
+function startYield(){if(S.yi)return;S.yi=setInterval(()=>{if(S.pv<=0)return;const a=parseFloat(document.getElementById('apy').textContent)/100;const ps=(S.pv*a)/(365*24*3600);S.ty+=ps*.5;S.yg=S.ty/3;document.getElementById('ty').textContent=fmtY(S.ty)+' USDC';document.getElementById('yg').textContent=fmtY(S.yg)+' USDC';},500);}
+function stopYield(){clearInterval(S.yi);S.yi=null;}
+
+async function modal(ic,ti,de,rows,dur){
+  const t=T();const d=dur||t.mo;
+  document.getElementById('mi').textContent=ic;
+  document.getElementById('mti').textContent=ti;
+  document.getElementById('mde').textContent=de;
+  document.getElementById('mdet').innerHTML=Object.entries(rows).map(([k,v])=>`<div class="mdr"><span class="mdl">${k}</span><span class="mdv">${v}</span></div>`).join('');
+  document.getElementById('mpend').textContent='Sending to Base Sepolia...';
+  document.getElementById('mov').classList.add('show');
+  const f=document.getElementById('afill');f.style.transition='none';f.style.width='0%';
+  await sl(60);f.style.transition=`width ${d}ms linear`;f.style.width='100%';
+  await sl(d);
+  document.getElementById('mpend').textContent='✓ Confirmed!';
+  await sl(t.s*.5);
+  document.getElementById('mov').classList.remove('show');
+}
+
+async function runVRF(mo,wi){
+  const t=T();const wn=NM[wi];const isYou=wi===0;
+  setMC(`<div class="mt">Month ${mo} — Chainlink VRF 🎲</div><div class="md">Requesting verifiable random number. Pot: <strong style="color:var(--green)">30 USDC</strong></div>
+    <div class="vrfbox" id="vb"><span class="dice" id="vd">🎲</span><div style="font-size:10px;color:var(--dim)">fulfillRandomWords in progress…</div><div class="vrfnum" id="vn">——————————</div><div style="font-size:10px;color:var(--dim)">Coordinator: 0x5C210eF41CD1a72de73bF76eC39637bB0d3d7BEE</div></div>`);
+  addTx('⬡','icv',`requestDrawing() Mo.${mo}`,'VRF v2.5','','');
+  const df=['⚀','⚁','⚂','⚃','⚄','⚅'];let f=0;
+  const di=setInterval(()=>{const d=document.getElementById('vd');const n=document.getElementById('vn');if(d)d.textContent=df[f++%6];if(n)n.textContent=Math.floor(Math.random()*999999999).toString().padStart(9,'0');},90);
+  await sl(t.vrf);clearInterval(di);
+  const fn=Math.floor(Math.random()*900000000)+100000000;
+  const vn=document.getElementById('vn');if(vn)vn.textContent=fn.toString();
+  const vd=document.getElementById('vd');if(vd){vd.textContent='🎯';vd.style.animation='bounce .4s ease';}
+  await sl(t.s*.7);
+  const vb=document.getElementById('vb');
+  if(vb)vb.innerHTML+=`<div class="wbox"><div style="font-size:10px;color:var(--dim);margin-bottom:4px">🏆 Month ${mo} Winner</div><div class="wname">${wn}${isYou?' 🎉':''}</div><div style="font-size:12px;color:var(--dim);margin-top:2px">${isYou?'Pot sent to your wallet!':'Receives 30 USDC'}</div></div>`;
+  S.mw.push(wi);if(isYou){S.u+=30;S.pot+=30;}
+  addTx('⬡','icv',`fulfillRandomWords Mo.${mo}`,`Winner: ${wn}`,isYou?'+30 USDC':'','');
+  if(isYou)addTx('🏆','icg','You won the pot!','30 USDC → wallet','+30.00','gr');
+  upd();await sl(t.l);
+}
+
+async function startDemo(){
+  document.getElementById('ss').style.display='none';
+  const t=T();
+
+  // 0: Connect
+  setStep(0);
+  sub('Welcome! This is the Starosca automated demo — from wallet connect all the way to collateral withdrawal and DeFi yield.');
+  await modal('🦊','Connect Wallet','Connecting MetaMask to Base Sepolia.',{'Wallet':'MetaMask','Network':'Base Sepolia','Account':'0xcD1b...5821','USDC':'1,000.00'});
+  document.getElementById('wd').className='w-dot on';document.getElementById('wl').textContent='0xcD1b...5821';document.getElementById('waddr').textContent='0xcD1b311Ea2CDd26427eb6a9A5B400f5037475821';
+  addTx('🔌','icg','Wallet Connected','MetaMask · Base Sepolia','','');await sl(t.s);
+
+  // 1: Join
+  setStep(1);
+  sub('Pool: 3 members, 10 USDC/month. Total to join = 30 USDC collateral + 10 USDC first contribution = 40 USDC.');
+  setMC(`<div class="mt">Join ROSCA Pool</div><div class="md">3 members · 10 USDC/mo · Collateral 30 USDC · Total: <strong style="color:var(--green)">40 USDC</strong></div>
+    <div class="statrow"><div class="statcard"><div class="stl">Collateral</div><div class="stv gr">30 USDC</div></div><div class="statcard"><div class="stl">Contribution Mo.1</div><div class="stv">10 USDC</div></div><div class="statcard"><div class="stl">Total Pay</div><div class="stv gr">40 USDC</div></div></div>
+    <div style="background:var(--green-dim);border:1px solid var(--green-border);border-radius:8px;padding:10px;margin-top:6px;font-size:11px"><strong style="color:var(--green)">Collateral = members × monthly contribution</strong><br><span style="color:var(--dim)">3 × 10 USDC = 30 USDC. Returned at the end + DeFi yield.</span></div>`);
+  await sl(t.m);
+  sub('Step 1: approve USDC. Step 2: join pool. Collateral goes directly to YieldManager and starts earning yield on Aave V3.');
+  await modal('✅','Approve USDC','Allow the contract to use your USDC.',{'Token':'USDC (Circle)','Spender':'StaroscaPool','Amount':'40.00 USDC'});
+  addTx('✅','icg','USDC Approved','Allowance 40 USDC','','');await sl(t.s*.5);
+  await modal('🏊','Join Pool','Deposit collateral + month 1 contribution.',{'Collateral':'30 USDC → YieldManager → Aave V3','Contribution Mo.1':'10 USDC → Pool Pot','Total':'-40.00 USDC','New Balance':'960.00 USDC'});
+  S.u-=40;S.col=30;S.joined[0]=true;S.pv+=40;upd();
+  addTx('🏊','icv','Join Pool — Alice','30 USDC → Aave V3 | 10 → Pot','-40.00','rd');startYield();await sl(t.s);
+
+  // Bob & Carol
+  sub('Bob and Carol join automatically. Once all 3 slots are filled, the pool activates immediately.');
+  setMC(`<div style="text-align:center;padding:16px 0"><div style="font-size:36px;margin-bottom:8px">⏳</div><div class="mt">Waiting for other members...</div><div class="md">Bob and Carol are joining</div></div>`);
+  await sl(t.m);S.joined[1]=true;S.pv+=40;upd();addTx('🧑','icc','Join — Bob','30 USDC collateral | 10 → Pot','','');
+  await sl(t.s*.6);S.joined[2]=true;S.pv+=40;S.pst='ACTIVE';S.cm=1;upd();addTx('👩','ico','Join — Carol','30 USDC collateral | 10 → Pot','','');
+  await sl(t.s*.5);addTx('⚡','icg','Pool ACTIVE!','All members joined','','');await sl(t.s);
+
+  // MONTH 1
+  setStep(2);
+  sub('Month 1 begins! I pay my contribution on day 7 — within the on-time window (days 1–10), which earns a yield bonus.');
+  setMC(`<div class="mt">Month 1 — Pay Contribution</div><div class="md">Pay before day 10 → on-time yield bonus. This month's pot: <strong style="color:var(--green)">30 USDC</strong></div>
+    ${mtl(1,0)}<div style="background:rgba(0,230,118,.06);border:1px solid var(--green-border);border-radius:8px;padding:8px;font-size:11px"><span style="color:var(--green);font-weight:700">📅 Day 7 — On-Time Window</span><br><span style="color:var(--dim)">On-time payment = higher yield multiplier at finalization</span></div>`);
+  await sl(t.m);
+  await modal('💳','Pay Month 1 Contribution','On-time payment on day 7.',{'Amount':'10.00 USDC','To':'Pool Pot','Status':'On-Time ✓','Yield Bonus':'Eligible','New Balance':'950.00 USDC'});
+  S.u-=10;S.pv+=10;upd();addTx('💳','icg','Pay Mo.1 — Alice (On-Time)','Day 7','-10.00','rd');
+  await sl(t.s*.4);addTx('🧑','icc','Pay Mo.1 — Bob','On-Time','','');
+  await sl(t.s*.4);addTx('👩','ico','Pay Mo.1 — Carol','On-Time','','');
+  await sl(t.m);
+  sub('All paid! Chainlink VRF randomly and verifiably selects this month\'s winner.');
+  await runVRF(1,S.W[0]);S.cm=2;upd();
+
+  // MONTH 2
+  setStep(3);
+  sub('Month 2. The CRE Workflow AI detects Compound V3 offers higher APY. Automatic rebalance!');
+  setMC(`<div class="mt">Month 2 — AI Rebalancing!</div><div class="md">CRE Workflow found a better yield. Auto-switching protocol.</div>
+    ${mtl(2,1)}<div style="background:rgba(0,230,118,.05);border:1px solid var(--green-border);border-radius:8px;padding:10px;margin-top:6px">
+      <div style="font-size:10px;color:var(--green);font-weight:700;margin-bottom:6px">🤖 CRE AI Yield Optimizer</div>
+      <div style="display:flex;gap:10px;font-size:11px;align-items:center">
+        <div style="flex:1;text-align:center;background:var(--card2);border-radius:6px;padding:8px"><div style="color:var(--dim)">Before</div><div style="font-weight:700">Aave V3</div><div style="color:var(--dim)">8.50% APY</div></div>
+        <div style="color:var(--green);font-size:16px">→</div>
+        <div style="flex:1;text-align:center;background:var(--card2);border-radius:6px;padding:8px"><div style="color:var(--dim)">After</div><div style="font-weight:700;color:var(--green)">Compound V3</div><div style="color:var(--green)">9.20% APY ↑</div></div>
+      </div>
+    </div>`);
+  await sl(t.m);
+  await modal('🤖','AI Rebalancing','CRE Workflow detected a better yield opportunity.',{'Previous Protocol':'Aave V3 (8.50%)','New Protocol':'Compound V3 (9.20%)','Delta APY':'+0.70%','Trigger':'CRE Workflow (auto)','Gas':'~$0.008'});
+  document.getElementById('prot').textContent='🟢 Compound V3';document.getElementById('apy').textContent='9.20%';
+  addTx('🤖','icv','CRE Rebalance: Aave → Compound','APY 8.50% → 9.20%','','');await sl(t.s*.6);
+  sub('Now paying month 2 contribution. On-time again!');
+  await modal('💳','Pay Month 2 Contribution','On-time payment on day 5.',{'Amount':'10.00 USDC','To':'Pool Pot','Status':'On-Time ✓','New Balance':'940.00 USDC'});
+  S.u-=10;S.pv+=10;upd();addTx('💳','icg','Pay Mo.2 — Alice (On-Time)','Day 5','-10.00','rd');
+  await sl(t.s*.4);addTx('🧑','icc','Pay Mo.2 — Bob','','','');
+  await sl(t.s*.4);addTx('👩','ico','Pay Mo.2 — Carol','','','');
+  await sl(t.m);
+  sub('VRF drawing month 2... Alice wins the 30 USDC pot! This is how Chainlink VRF guarantees fairness.');
+  await runVRF(2,S.W[1]);S.cm=3;upd();
+
+  // MONTH 3
+  setStep(4);
+  sub('Final month. After this, all members can claim their collateral + yield accumulated over 3 months.');
+  setMC(`<div class="mt">Month 3 — Final Round</div><div class="md">After this drawing, the pool is complete and all members can claim collateral + yield.</div>
+    ${mtl(3,2)}<div style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:6px;font-size:11px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--dim)">Won Pot (Mo.2)</span><span style="color:var(--green);font-weight:700">+30.00 USDC</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--dim)">Active Collateral</span><span style="color:#a78bfa;font-weight:700">30.00 USDC</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--dim)">Accumulated Yield</span><span style="color:var(--green);font-weight:700">${fmtY(S.yg)} USDC</span></div>
+    </div>`);
+  await sl(t.m);
+  await modal('💳','Pay Month 3 Contribution','Final month on-time payment.',{'Amount':'10.00 USDC','Status':'On-Time ✓','New Balance':'930.00 USDC'});
+  S.u-=10;S.pv+=10;upd();addTx('💳','icg','Pay Mo.3 — Alice (On-Time)','','-10.00','rd');
+  await sl(t.s*.4);addTx('🧑','icc','Pay Mo.3 — Bob','','','');
+  await sl(t.s*.4);addTx('👩','ico','Pay Mo.3 — Carol','','','');await sl(t.m);
+  sub('Carol wins month 3. All members have received their turn. Pool complete.');
+  await runVRF(3,S.W[2]);S.pst='COMPLETED';S.cm=3;upd();
+  addTx('⚡','icg','Pool COMPLETE','Ready to finalize','','');await sl(t.s);
+
+  // FINALIZE
+  setStep(5);
+  const cY=parseFloat((S.ty/3*.6).toFixed(4));const ctY=parseFloat((S.ty/3*.4).toFixed(4));S.claim=30+cY+ctY;
+  sub('Pool finalization. The contract calculates the final yield snapshot — collateral + yield ready for all members to claim.');
+  setMC(`<div class="mt">Finalize Pool</div><div class="md">Contract locks yield snapshot for final distribution.</div>
+    <table class="ctbl"><thead><tr><th>Item</th><th>Amount</th></tr></thead>
+    <tbody>
+      <tr><td>Collateral Returned</td><td style="color:var(--green)">30.0000 USDC</td></tr>
+      <tr><td>Collateral Yield (time-weighted)</td><td style="color:var(--green)">${cY} USDC</td></tr>
+      <tr><td>Contribution Yield (on-time bonus)</td><td style="color:#06b6d4">${ctY} USDC</td></tr>
+    </tbody>
+    <tfoot><tr><td>Alice's Total Claim</td><td>${S.claim.toFixed(4)} USDC</td></tr></tfoot></table>`);
+  await sl(t.m);
+  await modal('⚡','Finalize Pool','Locking yield snapshot. Claims activated.',{'Status':'COMPLETED → FINALIZED','Alice Claim':'~'+fmt(S.claim)+' USDC','Members':'3','Gas':'~$0.04'});
+  S.pst='FINALIZED';upd();addTx('⚡','icv','Pool Finalized','Yield snapshot locked | Claims active','','');await sl(t.s);
+
+  // CLAIM
+  setStep(6);
+  sub('Claim! Withdrawing 30 USDC collateral plus yield from Aave and Compound. This is Starosca\'s advantage — collateral earns yield while in the pool.');
+  setMC(`<div class="mt">Final Distribution Claim 💰</div><div class="md">Withdraw collateral + all yield accumulated over 3 months.</div>
+    <div style="text-align:center;background:rgba(0,230,118,.06);border:1px solid var(--green-border);border-radius:10px;padding:12px;margin:8px 0">
+      <div style="font-size:10px;color:var(--dim)">Total Claim</div>
+      <div style="font-size:32px;font-weight:900;color:var(--green)">${S.claim.toFixed(4)} <span style="font-size:14px;color:var(--dim)">USDC</span></div>
+    </div>
+    <table class="ctbl"><thead><tr><th>Component</th><th>Amount</th></tr></thead>
+    <tbody>
+      <tr><td>Collateral (100% returned)</td><td>30.0000 USDC</td></tr>
+      <tr><td>Collateral Yield</td><td style="color:var(--green)">${cY} USDC</td></tr>
+      <tr><td>Contribution Yield (on-time bonus)</td><td style="color:#06b6d4">${ctY} USDC</td></tr>
+    </tbody>
+    <tfoot><tr><td>Total Claim</td><td>${S.claim.toFixed(4)} USDC</td></tr></tfoot></table>
+    <div style="background:rgba(0,230,118,.05);border:1px solid var(--green-border);border-radius:7px;padding:7px;font-size:11px;margin-top:6px">+ ROSCA Pot Mo.2: <strong style="color:var(--green)">+30.00 USDC</strong> (already in wallet)</div>`);
+  await sl(t.m);
+  await modal('💰','Claim & Withdraw','Withdrawing all balance from pool.',{'Collateral':'30.0000 USDC','Collateral Yield':cY+' USDC','Contribution Yield':ctY+' USDC','Total':S.claim.toFixed(4)+' USDC','To':'0xcD1b...5821'});
+  S.u+=S.claim;S.col=0;S.yg=cY+ctY;stopYield();upd();
+  addTx('💰','icg','Claim Successful!',`${S.claim.toFixed(4)} USDC withdrawn`,'+'+S.claim.toFixed(4),'gr');await sl(t.s);
+
+  // DONE
+  setStep(7);
+  const net=S.u-1000;
+  sub('Demo complete! A full ROSCA cycle done. Collateral secure, fair pot via VRF, yield auto-optimized by AI. Thank you!');
+  setMC(`<div style="text-align:center;margin-bottom:12px"><div style="font-size:40px">🎊</div><div class="mt" style="margin-top:6px">Demo Complete!</div></div>
+    <div class="sgrid">
+      <div class="sc2"><div class="scl">Total Contributed</div><div class="scv">60.00 USDC</div></div>
+      <div class="sc2"><div class="scl">Won Pot (Mo.2)</div><div class="scv yw">+30.00 USDC</div></div>
+      <div class="sc2"><div class="scl">Collateral Returned</div><div class="scv gr">+30.00 USDC</div></div>
+      <div class="sc2"><div class="scl">DeFi Yield</div><div class="scv cy">+${fmtY(cY+ctY)} USDC</div></div>
+    </div>
+    <div style="background:rgba(0,230,118,.07);border:2px solid var(--green-border);border-radius:10px;padding:14px;text-align:center;margin-top:8px">
+      <div style="font-size:11px;color:var(--dim)">Final Balance · Started at 1,000 USDC</div>
+      <div style="font-size:36px;font-weight:900;color:var(--green)">${fmt(S.u)} <span style="font-size:14px;color:var(--dim)">USDC</span></div>
+      <div style="font-size:12px;margin-top:2px">Net Profit: <span style="color:var(--green);font-weight:700">+${fmt(net)} USDC</span></div>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:8px;justify-content:center">
+      <button onclick="location.reload()" style="background:var(--card2);border:1px solid var(--border);color:var(--text);padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">↺ Replay</button>
+      <a href="https://starosca.vercel.app" target="_blank" style="background:var(--green);color:#000;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none">🌐 Live App →</a>
+    </div>`);
+}
+</script>
+</body>
+</html>
